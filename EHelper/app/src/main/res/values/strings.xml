@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">EHelper</string>
+
+    <!-- SignActivity-->
+    <string name="mensaje_completado">Sus datos han sido guardados</string>
+    <string name="mensaje_bienvenida">Bienvenido, ingrese sus datos:</string>
+    <string name="nombre">Nombre</string>
+    <string name="rut">Rut</string>
+    <string name="continuar">Continuar</string>
+
+    <!--MainActivity-->
+    <string name="open_dl">Open</string>
+    <string name="close_dl">Close</string>
+
+    <!--ExcActivity-->
+    <string name="siguiente">Siguiente</string>
+
+    <!--MapActivity-->
+    <string name="texto_pais">Seleccione un país:</string>
+    <string name="texto_region">Seleccione una región:</string>
+
+    <!--FinalActivity-->
+    <string name="volver_inicio">Volver al inicio</string>
+
+
+    <!--Menu -->
+    <string name="ajustes">Ajustes</string>
+    <string name="inicio">Inicio</string>
+    <string name="salir">Salir</string>
+    <string name="buscar">Buscar</string>
+
+
+</resources>
