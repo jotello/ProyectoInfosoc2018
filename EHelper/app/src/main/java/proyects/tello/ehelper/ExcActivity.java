@@ -24,18 +24,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import proyects.tello.ehelper.Adapters.QuestionAdapter;
-import proyects.tello.ehelper.Entidades.PreguntaExcluyente;
+import proyects.tello.ehelper.Entidades.Pais;
+import proyects.tello.ehelper.Entidades.Pregunta;
+import proyects.tello.ehelper.Entidades.Zona;
 
 public class ExcActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Context context;
     Button button;
-    List<PreguntaExcluyente> myDataSet = new ArrayList<PreguntaExcluyente>();
+    List<Pregunta> myDataSet = new ArrayList<Pregunta>();
+    List<String> sintomasPaciente = new ArrayList<>();
+    List<String> tags = new ArrayList<>();
+    List<Pais> paises = new ArrayList<>();
+    List<Zona> zonas = new ArrayList<>();
 
 
     @Override
@@ -43,6 +50,11 @@ public class ExcActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exc);
         context = getApplicationContext();
+
+        myDataSet = (ArrayList<Pregunta>) getIntent().getSerializableExtra("Preguntas");
+        tags = (List<String>) getIntent().getSerializableExtra("Tags");
+        paises = (List<Pais>) getIntent().getSerializableExtra("Paises");
+        zonas = (List<Zona>) getIntent().getSerializableExtra("Zonas");
 
         Toolbar toolbar = findViewById(R.id.toolbar_exc);
         setSupportActionBar(toolbar);
@@ -85,30 +97,19 @@ public class ExcActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // Asociamos un adapter e inicializamos un dataSet de prueba
-        myDataSet.add(
-                new PreguntaExcluyente("1. ¿Náuseas?",
-                        "Si", "No"));
-        myDataSet.add(
-                new PreguntaExcluyente("2. ¿Vómito?",
-                        "Si", "No"));
-        myDataSet.add(
-                new PreguntaExcluyente("3. ¿Dolor de cabeza?",
-                        "Si", "No"));
-        myDataSet.add(
-                new PreguntaExcluyente("4. ¿Fiebre Alta?",
-                        "Si", "No"));
-
-
-
-        QuestionAdapter mAdapter = new QuestionAdapter(context, myDataSet);
+        final QuestionAdapter mAdapter = new QuestionAdapter(context, myDataSet);
         mRecyclerView.setAdapter(mAdapter);
 
         button = findViewById(R.id.button_siguiente_exc);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, TagActivity.class);
+                sintomasPaciente = mAdapter.getSintomasPaciente();
+                Intent intent = new Intent(context, MapActivity.class);
+                intent.putExtra("Paises", (Serializable) paises);
+                intent.putExtra("Tags", (Serializable) tags);
+                intent.putExtra("Zonas", (Serializable) zonas);
+                intent.putExtra("SintomasPaciente", (Serializable) sintomasPaciente);
                 startActivity(intent);
             }
         });

@@ -19,20 +19,44 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import proyects.tello.ehelper.Entidades.Pais;
+import proyects.tello.ehelper.Entidades.Pregunta;
+import proyects.tello.ehelper.Entidades.Zona;
 
 public class MapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Context context;
     Button button;
+    List<Pais> paisesImportados = new ArrayList<>();
+    List<Zona> zonasImportadas  = new ArrayList<>();
+    List<String> sintomasPaciente = new ArrayList<>();
+    List<String> tags  = new ArrayList<>();
+    Float riesgoVistoMalaria ;
+    Float riesgoVistoZika;
+
+    EditText tiempoSintomas ;
+    EditText tiempoIncubacion ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         context = getApplicationContext();
+
+        tags = (List<String>) getIntent().getSerializableExtra("Tags");
+        paisesImportados = (List<Pais>) getIntent().getSerializableExtra("Paises");
+        zonasImportadas = (List<Zona>) getIntent().getSerializableExtra("Zonas");
+        sintomasPaciente = (List<String>) getIntent().getSerializableExtra("SintomasPaciente");
 
         // Action bar y drawer layout
         Toolbar toolbar = findViewById(R.id.toolbar_map);
@@ -64,54 +88,131 @@ public class MapActivity extends AppCompatActivity
         }
 
         Spinner spinnerPais = findViewById(R.id.spinner_pais);
+        List<String> paises = new ArrayList<>();
+
+        cargarPaises(paises);
+        String[] regiones = new String[]{"-", "-"}; //Esto se queda siempre
+
+        List<String> regionesArgentina = new ArrayList<>();
+        List<String> regionesBolivia = new ArrayList<>();
+        List<String> regionesChile = new ArrayList<>();
+        List<String> regionesPeru = new ArrayList<>();
+        cargarZonas(regionesArgentina, regionesBolivia, regionesPeru, regionesChile);
 
 
-        final String[] paises = new String[] {"Bolivia", "Argentina"};
-        String[] regiones = new String[]{"-", "-"};
-        String[] regionesArgentina = new String []{"Jujuy", "Salta", "Chaco", "Corrientes",
-                "Formosa", "Misiones", "Entre Ríos", "Buenos Aires", "Santa Fe", "Santiago del Estero"
-        , "Tucuman", "Catamarca", "La Rioja", "Cordoba", "San Juan", "San Luis", "Mendoza", "La Pampa", "Neuquen",
-        "Rio Negro", "Chubut", "Santa Cruz"};
-        String[] regionesBolivia = new String []{"Oruro", "Potosi", "Pando", "Beni", "La Paz",
-                "Tarija", "Chuquisaca", "Conchabamba", "Santa Cruz"};
 
         //Implemento el adapter con el contexto, layout,
         final ArrayAdapter paisAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paises);
+
         final ArrayAdapter regionAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, regiones);
+
         final ArrayAdapter boliviaAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, regionesBolivia);
         final ArrayAdapter argenAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, regionesArgentina);
+        final ArrayAdapter peruAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, regionesPeru);
+        final ArrayAdapter chileAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, regionesChile);
 
         //Cargo el spinner con los datos
         spinnerPais.setAdapter(paisAdapter);
+        final Spinner spinnerRegion = findViewById(R.id.spinner_region);
 
-
-        spinnerPais.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        spinnerPais.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                if (i == 0){
-                    Spinner spinnerRegion = findViewById(R.id.spinner_region);
-                    spinnerRegion.setAdapter(boliviaAdapter);
-                } else{
-                    Spinner spinnerRegion = findViewById(R.id.spinner_region);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String paisSeleccionado = (String) adapterView.getItemAtPosition(i);
+                if(paisSeleccionado.equals("Peru")){ //PERU
+                    spinnerRegion.setAdapter(peruAdapter);
+                } else if(paisSeleccionado.equals("Argentina")){//ARGENTINA
                     spinnerRegion.setAdapter(argenAdapter);
+                } else if (paisSeleccionado.equals("Bolivia")){ //BOLIVIA
+                    spinnerRegion.setAdapter(boliviaAdapter);
+                }
+                else{ //CHILE
+                    spinnerRegion.setAdapter(chileAdapter);
                 }
             }
-        });
 
-        button = findViewById(R.id.button_siguiente_map);
-        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, FinalActivity.class);
-                startActivity(intent);
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                spinnerRegion.setAdapter(regionAdapter);
             }
         });
 
+        spinnerRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String zonaSeleccionada = (String) adapterView.getItemAtPosition(i);
+                for(Zona z: zonasImportadas){
+                    if(z.getNombre().equals(zonaSeleccionada)){
+                        riesgoVistoMalaria = z.getRiesgoMalaria();
+                        riesgoVistoZika = z.getRiesgoZika();
+                    }
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //Hacer algo cuando ninguna region es seleccionada, como un mensaje retando al usuario
+            }
+        });
+
+        tiempoSintomas = findViewById(R.id.tiempo_sintomas);
+        tiempoIncubacion = findViewById(R.id.tiempo_incubacion);
+
+
+        button = findViewById(R.id.button_siguiente_map);
+
+    }
+
+    public void exeGoTagAct(View view) {
+
+        if(tiempoSintomas.getText().toString().equals("")){
+            Toast.makeText(context, "Ingrese hace cuanto tiene sintomas. ", Toast.LENGTH_SHORT).show();
+        } else{
+            if(tiempoIncubacion.getText().toString().equals("")){
+                Toast.makeText(context, "Ingrese el tiempo de incubación. ", Toast.LENGTH_SHORT).show();
+            } else{
+                Integer tiempoSintomasPaciente = Integer.valueOf(tiempoSintomas.getText().toString());
+                Integer tiempoIncubacionPaciente = Integer.valueOf(tiempoIncubacion.getText().toString());
+
+                Intent intent = new Intent(context, TagActivity.class);
+                intent.putExtra("Tags", (Serializable) tags);
+                intent.putExtra("RiesgoMalaria", riesgoVistoMalaria);
+                intent.putExtra("RiesgoZika", riesgoVistoZika);
+                intent.putExtra("SintomasPaciente", (Serializable) sintomasPaciente);
+                intent.putExtra("TiempoSintomas", tiempoSintomasPaciente);
+                intent.putExtra("TiempoIncubacion", tiempoIncubacionPaciente);
+                startActivity(intent);
+            }
+        }
+
+    }
+
+    private void cargarZonas(List<String> regionesArgentina, List<String> regionesBolivia,
+                             List<String> regionesPeru, List<String> regionesChile) {
+        for(Zona z: zonasImportadas){
+            if(z.getPais().equals("Argentina")){
+                regionesArgentina.add(z.getNombre());
+            }
+            else if(z.getPais().equals("Bolivia")){
+                regionesBolivia.add(z.getNombre());
+            }
+            else if(z.getPais().equals("Chile")){
+                regionesChile.add(z.getNombre());
+            }  else if (z.getPais().equals("Peru")){
+                regionesPeru.add(z.getNombre());
+            }
+        }
+    }
+
+    private void cargarPaises(List<String> paises) {
+        for(Pais p: paisesImportados){
+            paises.add(p.getNombre());
+        }
     }
 
     @Override

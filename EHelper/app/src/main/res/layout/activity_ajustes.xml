@@ -3,13 +3,170 @@
     android:id="@+id/drawer_layout_ajustes"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.v7.widget.Toolbar
+            app:title="@string/ajustes"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextColor="@color/blanco" />
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:textColor="@color/gris_fuerte"
+                    android:layout_margin="@dimen/fab_margin"
+                    android:text="@string/datos_ajustes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+                <View
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+                
+                <LinearLayout
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/seccion_nombre"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textColor="@color/negro"
+                        android:text="@string/nombre_medico"
+                        android:layout_marginBottom="@dimen/fab_margin"
+                        android:layout_marginTop="@dimen/fab_margin"
+                        android:layout_marginRight="@dimen/fab_margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <EditText
+                        android:hint="@string/nombre"
+                        android:id="@+id/nombre_medico_ajustes"
+                        android:layout_marginTop="@dimen/fab_margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/seccion_rut"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textColor="@color/negro"
+                        android:text="@string/rut_medico"
+                        android:layout_marginBottom="@dimen/fab_margin"
+                        android:layout_marginTop="@dimen/fab_margin"
+                        android:layout_marginRight="@dimen/fab_margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <EditText
+                        android:id="@+id/rut_medico_ajustes"
+                        android:layout_marginTop="@dimen/fab_margin"
+                        android:hint="@string/rut"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_guardar"
+                    android:visibility="gone"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="right"
+                    android:text="@string/guardar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:textColor="@color/gris_fuerte"
+                    android:layout_margin="@dimen/fab_margin"
+                    android:text="@string/version_app"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+                <View
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorAccent" />
+
+                <LinearLayout
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/seccion_app"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textColor="@color/negro"
+                    android:text="@string/version_dev"
+                    android:layout_marginBottom="@dimen/fab_margin"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginRight="0dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="40dp"
+                android:textColor="@color/negro"
+                android:layout_gravity="bottom"
+                android:text="@string/borrar_cuenta"
+                android:id="@+id/borrar_cuenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+
     </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        app:headerLayout="@layout/nav_header"
+        android:background="@color/blanco"
+        app:itemTextColor="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/navigation_menu"
+        android:layout_gravity="start"
+        android:id="@+id/nav_view_ajustes">
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

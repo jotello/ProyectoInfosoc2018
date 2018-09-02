@@ -51,5 +51,6 @@ public class SignActivity extends AppCompatActivity {
         Intent intent = null;
         intent = new Intent(context, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 }

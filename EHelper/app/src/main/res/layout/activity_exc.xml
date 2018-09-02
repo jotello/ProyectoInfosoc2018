@@ -10,6 +10,7 @@
 
 
     <LinearLayout
+        android:weightSum="10"
         android:scrollbars="vertical"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -26,37 +27,31 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextColor="@color/blanco" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
             <android.support.v7.widget.RecyclerView
+                android:layout_weight="9"
                 android:scrollbars="vertical"
                 android:id="@+id/rec_exc"
                 android:layout_width="match_parent"
-                android:layout_height="440dp"
+                android:layout_height="400dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
                 android:padding="10dp"
-                android:layout_marginBottom="5dp"
                 >
 
 
             </android.support.v7.widget.RecyclerView>
 
             <Button
-                android:layout_below="@+id/rec_exc"
+                android:layout_weight="1"
                 android:id="@+id/button_siguiente_exc"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/siguiente"
-                android:layout_marginStart="150dp"
-                android:layout_marginLeft="10dp" />
+                android:padding="15dp"
+                 />
 
-
-        </RelativeLayout>
 
 
 

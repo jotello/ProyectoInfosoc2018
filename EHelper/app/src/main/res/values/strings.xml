@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">EHelper</string>
+    <string name="app_name">EnoDiag</string>
+    <string name="version_dev">v1.0</string>
 
     <!-- SignActivity-->
     <string name="mensaje_completado">Sus datos han sido guardados</string>
@@ -11,17 +12,38 @@
     <!--MainActivity-->
     <string name="open_dl">Open</string>
     <string name="close_dl">Close</string>
+    <string name="mensaje_header_main_act">¡ Bienvenido/a al sistema EnoDiag !</string>
+    <string name="mensaje_bienvenida_main_act"> El presente sistema esta desarrollado para ayudar a los
+        profesionales de la salud para la detección y notificación de Enfermedades de Notificación Obligatoria.</string>
 
     <!--ExcActivity-->
     <string name="siguiente">Siguiente</string>
     <string name="preguntas_exc">Preguntas Excluyentes</string>
 
+    <!--TagActivity-->
+    <string name="tags">Tags</string>
+
     <!--MapActivity-->
+    <string name="ubicacion">Ubicación</string>
     <string name="texto_pais">Seleccione un país:</string>
     <string name="texto_region">Seleccione una región:</string>
+    <string name="texto_tiempo_sintomas">Ingrese hace cuantos días tiene los sintomas el paciente:</string>
+    <string name="texto_tiempo_incubacion">Ingrese el tiempo de incubación en días del paciente:</string>
 
     <!--FinalActivity-->
     <string name="volver_inicio">Volver al inicio</string>
+    <string name="resultados">Resultados</string>
+    <string name="malaria">Malaria</string>
+    <string name="zika">Zika</string>
+
+    <!--AjustesActivity-->
+    <string name="datos_ajustes">Datos Personales </string>
+    <string name="nombre_medico">Nombre: </string>
+    <string name="rut_medico">Rut: </string>
+    <string name="version_app">Versión App</string>
+    <string name="borrar_cuenta">Borrar Cuenta</string>
+    <string name="guardar">Guardar</string>
+    <string name="mensaje_actualizado">Sus datos han sido actualizados</string>
 
 
     <!--Menu -->

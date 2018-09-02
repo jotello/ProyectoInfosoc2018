@@ -25,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +38,27 @@ public class TagActivity extends AppCompatActivity
     Button button;
     RecyclerView recyclerView;
     Context context;
+    Float riesgoVistoMalaria;
+    Float riesgoVistoZika;
     List<String> myDataSet = new ArrayList<>();
+    List<String> tagsPaciente = new ArrayList<>();
+    List<String> sintomasPaciente = new ArrayList<>();
     TagAdapter mAdapter;
+    Integer tiempoSintomas;
+    Integer tiempoIncubacion;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag);
         context = getApplicationContext();
+        myDataSet = (List<String>) getIntent().getSerializableExtra("Tags");
+        sintomasPaciente = (List<String>) getIntent().getSerializableExtra("SintomasPaciente");
+        riesgoVistoMalaria = getIntent().getFloatExtra("RiesgoMalaria", (float) 0.1);
+        riesgoVistoZika = getIntent().getFloatExtra("RiesgoZika", (float) 0.1);
+        tiempoSintomas = getIntent().getIntExtra("TiempoSintomas", 1);
+        tiempoIncubacion = getIntent().getIntExtra("TiempoIncubacion", 1);
+
 
         // Action bar y drawer layout
         Toolbar toolbar = findViewById(R.id.toolbar_tag);
@@ -87,34 +102,22 @@ public class TagActivity extends AppCompatActivity
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // Asociamos un adapter e inicializamos un dataSet de prueba
-        myDataSet.add("Parches de sangre bajo la piel");
-        myDataSet.add("Disminución de apetito");
-        myDataSet.add("Sarpullido");
-        myDataSet.add("Manchas rojas");
-        myDataSet.add("Puntos púrpuras en la piel");
-        myDataSet.add("Picazón");
-        myDataSet.add("Artritis o Artralgia");
-        myDataSet.add("Diarrea");
-        myDataSet.add("Dolor abdominal");
-        myDataSet.add("Orina de color oscuro");
-        myDataSet.add("Vomito");
-        myDataSet.add("Hemorragia oral");
-        myDataSet.add("Hemorragia nasal");
-        myDataSet.add("Hemorragia ocular");
-        myDataSet.add("Hemorragia gastrica");
-        myDataSet.add("Escalofrios");
-        myDataSet.add("Anemia grave");
-        myDataSet.add("Sufrimiento respiratorio");
-
         mAdapter = new TagAdapter(context, myDataSet);
         recyclerView.setAdapter(mAdapter);
+
 
         button = findViewById(R.id.button_siguiente_tag);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, MapActivity.class);
+                tagsPaciente = mAdapter.getTagsPaciente();
+                Intent intent = new Intent(context, FinalActivity.class);
+                intent.putExtra("TagsPaciente", (Serializable) tagsPaciente);
+                intent.putExtra("RiesgoMalaria", riesgoVistoMalaria);
+                intent.putExtra("RiesgoZika", riesgoVistoZika);
+                intent.putExtra("SintomasPaciente", (Serializable) sintomasPaciente);
+                intent.putExtra("TiempoSintomas", tiempoSintomas);
+                intent.putExtra("TiempoIncubacion", tiempoIncubacion);
                 startActivity(intent);
             }
         });

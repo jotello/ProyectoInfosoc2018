@@ -1,5 +1,6 @@
 package proyects.tello.ehelper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +17,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import proyects.tello.ehelper.Entidades.Resultado;
+import proyects.tello.ehelper.Entidades.Sintoma;
+import proyects.tello.ehelper.Logica.Malaria;
+import proyects.tello.ehelper.Logica.Zika;
 
 public class FinalActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,13 +37,33 @@ public class FinalActivity extends AppCompatActivity
     Context context;
     TextView nombreUser, rutUser;
     DrawerLayout drawerLayout;
+    List<String> tagsPaciente = new ArrayList<>();
+    List<String> sintomasPaciente = new ArrayList<>();
+    List<Sintoma> listaFinalSintomas = new ArrayList<>();
+    Float riesgoVistoMalaria;
+    Float riesgoVistoZika;
+    Integer tiempoSintomas;
+    Integer tiempoIncubacion;
 
+    Float porcentajeMalaria;
+    String avisoMalaria;
+    Float porcentajeZika;
+    String avisoZika;
+
+    @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_final);
 
         context = getApplicationContext();
+        tagsPaciente = (List<String>) getIntent().getSerializableExtra("TagsPaciente");
+        sintomasPaciente = (List<String>) getIntent().getSerializableExtra("SintomasPaciente");
+        crearListaFinalSintomas(tagsPaciente, sintomasPaciente);
+        riesgoVistoMalaria = getIntent().getFloatExtra("RiesgoMalaria", (float) 0.1);
+        riesgoVistoZika = getIntent().getFloatExtra("RiesgoZika", (float) 0.1);
+        tiempoSintomas = getIntent().getIntExtra("TiempoSintomas", 1);
+        tiempoIncubacion = getIntent().getIntExtra("TiempoIncubacion", 1);
 
         // Action bar y drawer layout
         Toolbar toolbar = findViewById(R.id.toolbar_final);
@@ -69,6 +102,72 @@ public class FinalActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        calcularMalaria(listaFinalSintomas, riesgoVistoMalaria, tiempoSintomas, tiempoIncubacion);
+        calcularZika(listaFinalSintomas, riesgoVistoZika, tiempoSintomas, tiempoIncubacion);
+
+        TextView avisoMalariaTv = findViewById(R.id.aviso_malaria);
+        TextView avisoZikaTv = findViewById(R.id.aviso_zika);
+        TextView porcentajeMalariaTv = findViewById(R.id.porcentaje_malaria);
+        TextView porcentajeZikaTv = findViewById(R.id.porcentaje_zika);
+
+        LinearLayout linearLayoutMalaria = findViewById(R.id.linear_malaria);
+        LinearLayout linearLayoutZika = findViewById(R.id.linear_zika);
+        setColorAvisos(linearLayoutMalaria, linearLayoutZika);
+
+        avisoMalariaTv.setText(avisoMalaria);
+        avisoZikaTv.setText(avisoZika);
+        porcentajeMalariaTv.setText(String.format("%.0f%%", porcentajeMalaria * 100));
+        porcentajeZikaTv.setText(String.format("%.0f%%", porcentajeZika * 100));
+    }
+
+    private void setColorAvisos(LinearLayout linearLayoutMalaria, LinearLayout linearLayoutZika) {
+        //Deuda tecnica: Dejar este metodo escalable para muchas enfermedades
+        //Parte Malaria
+        if(porcentajeMalaria < 0.5){
+            linearLayoutMalaria.setBackgroundColor(getResources().getColor(R.color.verde));
+        } else if (porcentajeMalaria >= 0.5 && porcentajeMalaria < 0.8){
+            linearLayoutMalaria.setBackgroundColor(getResources().getColor(R.color.amarillo));
+        } else {
+            linearLayoutMalaria.setBackgroundColor(getResources().getColor(R.color.rojo));
+        }
+        //Parte Zika
+        if(porcentajeZika < 0.5){
+            linearLayoutZika.setBackgroundColor(getResources().getColor(R.color.verde));
+        } else if (porcentajeZika >= 0.5 && porcentajeZika < 0.8){
+            linearLayoutZika.setBackgroundColor(getResources().getColor(R.color.amarillo));
+        } else {
+            linearLayoutZika.setBackgroundColor(getResources().getColor(R.color.rojo));
+        }
+    }
+
+    private void crearListaFinalSintomas(List<String> tagsPaciente, List<String> sintomasPaciente) {
+        for(String s: tagsPaciente){
+            listaFinalSintomas.add(new Sintoma(s, "Tag"));
+        }
+        for (String s: sintomasPaciente){
+            listaFinalSintomas.add(new Sintoma(s, "Excluyente"));
+        }
+
+    }
+
+    private void calcularZika(List<Sintoma> listaFinalSintomas,
+                              Float riesgoVistoZika, Integer tiempoSintomas, Integer tiempoIncubacion) {
+
+        Zika zika = new Zika(tiempoIncubacion, tiempoSintomas, listaFinalSintomas, riesgoVistoZika, context);
+        Resultado resultado = zika.Comportamiento();
+        avisoZika = resultado.getMensaje();
+        porcentajeZika = resultado.getPorcentaje();
+    }
+
+    private void calcularMalaria(List<Sintoma> listaFinalSintomas, Float riesgoVistoMalaria,
+                                 Integer tiempoSintomas, Integer tiempoIncubacion) {
+
+        Malaria malaria = new Malaria(tiempoIncubacion,tiempoSintomas, listaFinalSintomas, riesgoVistoMalaria , context);
+        Resultado resultado = malaria.Comportamiento();
+        avisoMalaria = resultado.getMensaje();
+        porcentajeMalaria = resultado.getPorcentaje();
+
     }
 
     @Override

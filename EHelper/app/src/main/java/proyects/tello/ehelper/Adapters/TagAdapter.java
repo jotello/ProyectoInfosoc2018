@@ -7,17 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import proyects.tello.ehelper.R;
 
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
     private List<String> dataSet;
+    private List<String> tagsPaciente = new ArrayList<>();
     private LayoutInflater layoutInflater;
 
     public TagAdapter(Context context, List<String> datos){
         layoutInflater = LayoutInflater.from(context);
         this.dataSet = datos;
+    }
+
+    public List<String> getTagsPaciente(){
+        return tagsPaciente;
     }
 
     @Override
@@ -47,8 +53,15 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
             this.checkBox = itemView.findViewById(R.id.check_tag);
         }
 
-        public void setData(String data){
+        public void setData(final String data){
+
             checkBox.setText(data);
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tagsPaciente.add(data);
+                }
+            });
         }
     }
 }
