@@ -14,6 +14,7 @@
 
     <!--ExcActivity-->
     <string name="siguiente">Siguiente</string>
+    <string name="preguntas_exc">Preguntas Excluyentes</string>
 
     <!--MapActivity-->
     <string name="texto_pais">Seleccione un país:</string>

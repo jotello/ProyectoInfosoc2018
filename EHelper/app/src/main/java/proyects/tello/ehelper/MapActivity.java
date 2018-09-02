@@ -13,8 +13,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -25,7 +27,6 @@ public class MapActivity extends AppCompatActivity
 
     Context context;
     Button button;
-    TextView nombreUser, rutUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,20 +64,43 @@ public class MapActivity extends AppCompatActivity
         }
 
         Spinner spinnerPais = findViewById(R.id.spinner_pais);
-        Spinner spinnerRegion = findViewById(R.id.spinner_region);
 
-        String[] paises = new String[] {"Bolivia", "Argentina"};
-        String[] regiones = new String[]{"-"};
-        String[] regionesArgentina = new String []{"Jujuy", "Salta", "Chaco", "Corrientes", "Formosa", "Misiones", ""};
+
+        final String[] paises = new String[] {"Bolivia", "Argentina"};
+        String[] regiones = new String[]{"-", "-"};
+        String[] regionesArgentina = new String []{"Jujuy", "Salta", "Chaco", "Corrientes",
+                "Formosa", "Misiones", "Entre Ríos", "Buenos Aires", "Santa Fe", "Santiago del Estero"
+        , "Tucuman", "Catamarca", "La Rioja", "Cordoba", "San Juan", "San Luis", "Mendoza", "La Pampa", "Neuquen",
+        "Rio Negro", "Chubut", "Santa Cruz"};
         String[] regionesBolivia = new String []{"Oruro", "Potosi", "Pando", "Beni", "La Paz",
                 "Tarija", "Chuquisaca", "Conchabamba", "Santa Cruz"};
 
-        //Implemento el adapter con el contexto, layout, listaFrutas
-        ArrayAdapter paisAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paises);
-        ArrayAdapter regionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, regiones);
+        //Implemento el adapter con el contexto, layout,
+        final ArrayAdapter paisAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paises);
+        final ArrayAdapter regionAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, regiones);
+        final ArrayAdapter boliviaAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, regionesBolivia);
+        final ArrayAdapter argenAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, regionesArgentina);
+
         //Cargo el spinner con los datos
         spinnerPais.setAdapter(paisAdapter);
-        spinnerRegion.setAdapter(regionAdapter);
+
+
+        spinnerPais.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if (i == 0){
+                    Spinner spinnerRegion = findViewById(R.id.spinner_region);
+                    spinnerRegion.setAdapter(boliviaAdapter);
+                } else{
+                    Spinner spinnerRegion = findViewById(R.id.spinner_region);
+                    spinnerRegion.setAdapter(argenAdapter);
+                }
+            }
+        });
 
         button = findViewById(R.id.button_siguiente_map);
         button.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +112,26 @@ public class MapActivity extends AppCompatActivity
         });
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /**
+         MenuInflater menuInflater = getMenuInflater();
+         menuInflater.inflate(R.menu.menu_search, menu);
+         MenuItem item = menu.findItem(R.id.app_bar_search);
+         SearchView searchView = (SearchView) item.getActionView();
+         **/
+        return true;
     }
 
     @Override

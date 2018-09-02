@@ -99,41 +99,7 @@ public class ExcActivity extends AppCompatActivity
                 new PreguntaExcluyente("4. ¿Fiebre Alta?",
                         "Si", "No"));
 
-        myDataSet.add(
-                new PreguntaExcluyente("5. ¿Fiebre Baja?",
-                        "Si", "No"));
 
-        myDataSet.add(
-                new PreguntaExcluyente("6. ¿Dolor leve de articulaciones?",
-                        "Si", "No"));
-
-        myDataSet.add(
-                new PreguntaExcluyente("7. ¿Dolor intenso de articulaciones?",
-                        "Si", "No"));
-
-        myDataSet.add(
-                new PreguntaExcluyente("8. ¿Inflamación de articulaciones?",
-                        "Si", "No"));
-
-        myDataSet.add(
-                new PreguntaExcluyente("9. ¿Dolor muscular?",
-                        "Si", "No"));
-
-        myDataSet.add(
-                new PreguntaExcluyente("10. ¿Dolor de espalda?",
-                        "Si", "No"));
-
-        myDataSet.add(
-                new PreguntaExcluyente("11. ¿Conjuntivitis?",
-                        "Si", "No"));
-
-        myDataSet.add(
-                new PreguntaExcluyente("12. ¿Ojos Rojos?",
-                        "Si", "No"));
-
-        myDataSet.add(
-                new PreguntaExcluyente("13. ¿Cefalea (Dolor intenso de cabeza)?",
-                        "Si", "No"));
 
         QuestionAdapter mAdapter = new QuestionAdapter(context, myDataSet);
         mRecyclerView.setAdapter(mAdapter);
