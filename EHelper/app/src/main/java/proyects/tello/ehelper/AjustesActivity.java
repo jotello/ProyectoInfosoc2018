@@ -73,14 +73,14 @@ public class AjustesActivity extends AppCompatActivity
 
         final Button buttonGuardar = findViewById(R.id.button_guardar);
 
-        seccionNombre.setOnClickListener(new View.OnClickListener() {
+        nombre_user.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
                buttonGuardar.setVisibility(View.VISIBLE); //Hacemos visible el boton para guardar
            }
         });
 
-       seccionRut.setOnClickListener(new View.OnClickListener() {
+       rut_user.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
                buttonGuardar.setVisibility(View.VISIBLE);
@@ -94,9 +94,13 @@ public class AjustesActivity extends AppCompatActivity
                 String NOMBRE = nombre_user.getText().toString();
                 if (!RUT.equals("")) {
                     prefs.edit().putString("rutMedico", RUT).apply();
+                    rut_user.setHint(RUT);
+                    rut_user.setText("");
                 }
                 if (!NOMBRE.equals("")){
                     prefs.edit().putString("nombreMedico", NOMBRE).apply();
+                    nombre_user.setHint(NOMBRE);
+                    nombre_user.setText("");
                 }
 
 
